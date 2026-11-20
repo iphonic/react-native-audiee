@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- Background Gradient (Obsidian to Deep Charcoal) -->
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#181515"/>
+      <stop offset="60%" stop-color="#0C0A0C"/>
+      <stop offset="100%" stop-color="#050507"/>
+    </radialGradient>
+
+    <!-- Fiery Electric Amber to Audiee Orange Gradient -->
+    <linearGradient id="audieeOrangeGrad" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#FFB338"/>
+      <stop offset="35%" stop-color="#FF7A00"/>
+      <stop offset="70%" stop-color="#FF5100"/>
+      <stop offset="100%" stop-color="#E03200"/>
+    </linearGradient>
+
+    <!-- Subtle Internal Specular Highlight Gradient -->
+    <linearGradient id="specularGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35"/>
+      <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.2"/>
+    </linearGradient>
+
+    <!-- Glowing Border Gradient -->
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFB338" stop-opacity="0.95"/>
+      <stop offset="30%" stop-color="#FF7A00" stop-opacity="0.5"/>
+      <stop offset="70%" stop-color="#FF4500" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#FF7A00" stop-opacity="0.85"/>
+    </linearGradient>
+
+    <!-- Neon Ambient Glow Filters -->
+    <filter id="outerNeonGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="36" result="blur1"/>
+      <feGaussianBlur stdDeviation="72" result="blur2"/>
+      <feMerge>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="glyphShadowGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="24" stdDeviation="32" flood-color="#FF5100" flood-opacity="0.45"/>
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- ==================== BACKGROUND SQUIRCLE ==================== -->
+  <!-- Outer Glow Backplate -->
+  <rect x="32" y="32" width="960" height="960" rx="220" fill="url(#bgGrad)" filter="url(#outerNeonGlow)" opacity="0.35"/>
+
+  <!-- Main App Icon Squircle Base -->
+  <rect x="32" y="32" width="960" height="960" rx="220" fill="url(#bgGrad)"/>
+  
+  <!-- Sleek Glowing Rim -->
+  <rect x="32" y="32" width="960" height="960" rx="220" fill="none" stroke="url(#borderGrad)" stroke-width="8"/>
+
+  <!-- ==================== CLEANED & ENLARGED (+5%) AUDIEE GLYPH ==================== -->
+  <g filter="url(#glyphShadowGlow)" transform="translate(512, 512) scale(1.05) translate(-512, -512)">
+    <!-- Base Solid Geometric Music Note (No Cuts, Pure & Bold) -->
+    <g>
+      <!-- Note Head (Rotated Ellipse for energetic forward momentum) -->
+      <ellipse cx="405" cy="668" rx="126" ry="112" transform="rotate(-15 405 668)" fill="url(#audieeOrangeGrad)"/>
+      
+      <!-- Vertical Precision Stem -->
+      <rect x="465" y="275" width="65" height="360" rx="10" fill="url(#audieeOrangeGrad)"/>
+      
+      <!-- Modern Geometric Flag / Beam -->
+      <path d="M 465 275 
+               L 750 348 
+               C 768 353 772 372 756 386 
+               L 668 465 
+               C 595 415 535 392 465 396 Z" 
+            fill="url(#audieeOrangeGrad)"/>
+    </g>
+
+    <!-- Subtle Inner Specular Sheen (Adds Apple-Grade Depth) -->
+    <g opacity="0.6">
+      <ellipse cx="405" cy="668" rx="122" ry="108" transform="rotate(-15 405 668)" fill="url(#specularGrad)"/>
+      <path d="M 468 277 L 746 349 C 758 352 760 364 750 373 L 666 448 C 596 405 537 384 468 388 Z" fill="url(#specularGrad)"/>
+    </g>
+  </g>
+</svg>
