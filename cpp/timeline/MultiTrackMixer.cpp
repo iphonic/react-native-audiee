@@ -86,45 +86,6 @@ void MultiTrackMixer::applyMasterLimiter(float* stereoBuffer, size_t frameCount)
     }
 }
 
-Alignment::AlignmentResult MultiTrackMixer::autoAlignTracks(const std::string& refTrackId, const std::string& targetTrackId) {
-    std::shared_ptr<AudioTrack> refTrack = getTrack(refTrackId);
-    std::shared_ptr<AudioTrack> targetTrack = getTrack(targetTrackId);
-
-    if (!refTrack || !targetTrack) {
-        return { 0, 0.0f };
-    }
-
-    const auto& refPCM = refTrack->getRawPCM();
-    const auto& targetPCM = targetTrack->getRawPCM();
-
-    if (refPCM.empty() || targetPCM.empty()) {
-        return { 0, 0.0f };
-    }
-
-    // Assume stereo interleaved; pass mono left channel or mixed
-    std::vector<float> refMono(refPCM.size() / 2);
-    for (size_t i = 0; i < refMono.size(); ++i) {
-        refMono[i] = (refPCM[i * 2] + refPCM[i * 2 + 1]) * 0.5f;
-    }
-
-    std::vector<float> targetMono(targetPCM.size() / 2);
-    for (size_t i = 0; i < targetMono.size(); ++i) {
-        targetMono[i] = (targetPCM[i * 2] + targetPCM[i * 2 + 1]) * 0.5f;
-    }
-
-    Alignment::AlignmentResult result = Alignment::CrossCorrelationEngine::calculateOffset(
-        refMono.data(), refMono.size(),
-        targetMono.data(), targetMono.size(),
-        sampleRate_,
-        3000 // 3 second search window
-    );
-
-    // Apply offset directly to target track
-    targetTrack->setTimeOffsetMs(result.offsetMs);
-
-    return result;
-}
-
 double MultiTrackMixer::getTotalDurationSeconds() const {
     std::lock_guard<std::mutex> lock(trackMutex_);
     double maxDur = 0.0;

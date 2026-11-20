@@ -36,12 +36,6 @@ export interface Spec extends TurboModule {
     compThresholdDb: number
   ): void;
 
-  // Smart Auto-Alignment (Pro Feature)
-  autoAlignTracks(
-    refTrackId: string,
-    targetTrackId: string
-  ): Promise<{ offsetMs: number; confidence: number }>;
-
   // Waveform Peak Extraction
   extractWaveform(
     filePath: string,
@@ -58,19 +52,6 @@ export interface Spec extends TurboModule {
     outputPath: string,
     normalizeLufs: number
   ): Promise<boolean>;
-
-  // AI Stem Separator (Vocals vs Instrumental Isolation)
-  separateStems(
-    inputFilePath: string,
-    outputVocalPath: string,
-    outputInstPath: string
-  ): Promise<{
-    success: boolean;
-    vocalPath: string;
-    instrumentalPath: string;
-    durationSeconds: number;
-    errorMessage?: string;
-  }>;
 }
 
 export default TurboModuleRegistry.get<Spec>('AudieeEngine');

@@ -4,7 +4,6 @@
 #include <string>
 #include <mutex>
 #include "AudioTrack.hpp"
-#include "../alignment/CrossCorrelation.hpp"
 
 namespace Audiee {
 namespace Timeline {
@@ -24,12 +23,10 @@ public:
     bool removeTrack(const std::string& trackId);
     std::shared_ptr<AudioTrack> getTrack(const std::string& trackId);
     void clearTracks();
+    const std::vector<std::shared_ptr<AudioTrack>>& getTracks() const { return tracks_; }
 
     // Timeline Playback Processing (called by real-time miniaudio playback callback)
     void processPlayback(int64_t timelineSample, float* outStereoBuffer, size_t frameCount);
-
-    // Smart Auto-Alignment (Pro Feature)
-    Alignment::AlignmentResult autoAlignTracks(const std::string& refTrackId, const std::string& targetTrackId);
 
     // Offline File Export (WAV / MP3)
     bool exportMix(const ExportOptions& options);

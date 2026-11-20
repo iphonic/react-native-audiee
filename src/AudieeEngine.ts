@@ -1,5 +1,5 @@
 import NativeAudiee, { type Spec } from './NativeAudieeSpec';
-import type { DSPSettings, Preset, AlignmentResult, WaveformData, ExportOptions } from './types';
+import type { DSPSettings, Preset, WaveformData, ExportOptions } from './types';
 
 export class AudioTrackHandle {
   constructor(private engine: AudieeEngine, public readonly id: string) {}
@@ -106,18 +106,6 @@ export class AudieeEngine {
   }
 
   /**
-   * Pro Feature: 1-Touch Smart Alignment
-   * Automatically calculates the millisecond time offset needed to lock targetTrack to refTrack.
-   */
-  public async autoAlignTracks(
-    refTrackId: string,
-    targetTrackId: string
-  ): Promise<AlignmentResult> {
-    const result = await NativeAudiee?.autoAlignTracks(refTrackId, targetTrackId);
-    return result ?? { offsetMs: 0, confidence: 0 };
-  }
-
-  /**
    * Fast Waveform Extraction for 60fps Skia Rendering
    */
   public static async extractWaveform(
@@ -132,37 +120,6 @@ export class AudieeEngine {
       sampleRate: data?.sampleRate ?? 44100,
       channels: 1,
     };
-  }
-
-  /**
-   * AI Stem Separator: Isolates mixed audio into Vocals and Instrumental stems
-   */
-  public static async separateStems(
-    inputFilePath: string,
-    options?: {
-      outputVocalPath?: string;
-      outputInstPath?: string;
-    }
-  ): Promise<{
-    success: boolean;
-    vocalPath: string;
-    instrumentalPath: string;
-    durationSeconds: number;
-    errorMessage?: string;
-  }> {
-    const vocalPath = options?.outputVocalPath ?? inputFilePath.replace(/\.[^/.]+$/, '_vocals.wav');
-    const instPath = options?.outputInstPath ?? inputFilePath.replace(/\.[^/.]+$/, '_instrumental.wav');
-
-    const result = await NativeAudiee?.separateStems(inputFilePath, vocalPath, instPath);
-    return (
-      result ?? {
-        success: false,
-        vocalPath,
-        instrumentalPath: instPath,
-        durationSeconds: 0,
-        errorMessage: 'Native Audiee engine not initialized',
-      }
-    );
   }
 
   /**

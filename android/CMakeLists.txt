@@ -7,10 +7,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include_directories(
     ../cpp
     ../cpp/dsp
-    ../cpp/alignment
     ../cpp/timeline
     ../cpp/waveform
-    ../cpp/ai
 )
 
 add_library(
@@ -19,7 +17,6 @@ add_library(
     ../cpp/AudieeEngine.cpp
     ../cpp/timeline/AudioTrack.cpp
     ../cpp/timeline/MultiTrackMixer.cpp
-    ../cpp/ai/StemSeparator.cpp
 )
 
 find_library(LOG_LIB log)
