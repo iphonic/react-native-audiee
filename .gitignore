@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build & Library outputs
+lib/
+dist/
+build/
+*.o
+*.obj
+*.so
+*.dylib
+*.a
+
+# Test executables
+test/bin
+test/engine_test_bin
+test/*.dSYM
+
+# React Native & Metro
+.metro-health-check*
+*.metro.log
+
+# iOS
+Pods/
+ios/build/
+*.xcworkspace
+*.xcuserstate
+DerivedData/
+
+# Android
+.gradle/
+android/build/
+android/.cxx/
+android/app/build/
+*.apk
+*.aar
+local.properties
+
+# macOS & System files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# IDEs
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
