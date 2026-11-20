@@ -1,0 +1,13 @@
+platform :ios, '14.0'
+prepare_react_native_project!
+
+target 'AudieeExample' do
+  config = use_native_modules!
+  use_react_native!(
+    :path => config[:reactNativePath],
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  # Link local react-native-audiee
+  pod 'react-native-audiee', :path => '../..'
+end
