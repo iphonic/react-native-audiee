@@ -17,9 +17,9 @@ fi
 # Detect Operating System for platform-specific audio driver libraries
 UNAME_S="$(uname -s)"
 if [ "$UNAME_S" = "Linux" ]; then
-    EXTRA_FLAGS="-lpthread -ldl -lm -lasound"
+    EXTRA_FLAGS="-pthread -ldl -lm -lasound"
 else
-    EXTRA_FLAGS="-lpthread -ldl -lm"
+    EXTRA_FLAGS="-pthread -ldl -lm"
 fi
 
 echo "Compiling Audiee C++ Engine with $CXX on $UNAME_S..."
