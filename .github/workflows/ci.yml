@@ -3,13 +3,14 @@ name: CI
 on:
   push:
     branches: [ main ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main ]
 
 jobs:
   # Job 1: C++ Audio Engine & DSP Tests (macOS & Ubuntu Linux)
   test-cpp:
-    name: C++ Engine Tests (${{ matrix.os }})
+    name: C++ Tests (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -20,11 +21,11 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Install Linux Audio Dependencies
+      - name: Install Linux Build Dependencies
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libasound2-dev
+          sudo apt-get install -y libasound2-dev clang build-essential
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -47,12 +48,29 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: 'npm'
 
       - name: Install Dependencies
         run: |
-          npm install --package-lock-only
-          npm install typescript @types/react @types/react-native --no-save
+          npm install --legacy-peer-deps
 
-      - name: Run TypeScript Compiler Check
+      - name: Run TypeScript Typecheck
         run: |
-          npx tsc --noEmit --skipLibCheck
+          npm run typecheck
+
+  # Job 3: Automated GitHub Release (only on tags like v1.0.1)
+  release:
+    name: Create GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [test-cpp, typecheck]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
