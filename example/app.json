@@ -1,4 +1,34 @@
 {
-  "name": "AudieeExample",
-  "displayName": "Audiee"
+  "expo": {
+    "name": "Audiee",
+    "slug": "audiee-example",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "backgroundColor": "#0A0A0C"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.audiee.example",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Audiee requires access to your microphone to record audio."
+      }
+    },
+    "android": {
+      "package": "com.audiee.example",
+      "permissions": [
+        "RECORD_AUDIO",
+        "MODIFY_AUDIO_SETTINGS"
+      ]
+    },
+    "plugins": [
+      [
+        "../app.plugin.js",
+        {
+          "microphonePermission": "Allow Audiee to record studio-quality audio."
+        }
+      ]
+    ]
+  }
 }

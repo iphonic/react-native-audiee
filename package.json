@@ -14,6 +14,7 @@
     "ios",
     "cpp",
     "react-native-audiee.podspec",
+    "app.plugin.js",
     "!android/build",
     "!ios/build"
   ],
@@ -38,7 +39,9 @@
     "reverb",
     "compressor",
     "noise-gate",
-    "multitrack"
+    "multitrack",
+    "expo",
+    "expo-config-plugin"
   ],
   "author": "Audiee",
   "license": "MIT",

@@ -40,6 +40,33 @@ npm install react-native-audiee
 yarn add react-native-audiee
 ```
 
+### Expo Setup (Managed & Bare Workflow)
+
+`react-native-audiee` includes a built-in **Expo Config Plugin** that automatically configures microphone permissions and background audio capabilities during `npx expo prebuild`.
+
+In your `app.json`:
+```json
+{
+  "expo": {
+    "plugins": [
+      [
+        "react-native-audiee",
+        {
+          "microphonePermission": "Allow Audiee to record studio-quality audio."
+        }
+      ]
+    ]
+  }
+}
+```
+
+Then build your custom dev client:
+```bash
+npx expo run:ios
+# or
+npx expo run:android
+```
+
 ### iOS Setup (Choose CocoaPods or Swift Package Manager)
 
 #### Option A: CocoaPods
@@ -148,6 +175,40 @@ npm run test:cpp
 Typecheck the TypeScript codebase:
 ```bash
 npm run typecheck
+```
+
+---
+
+## 📱 Running the Example App
+
+The `example/` app demonstrates the full 5-screen Audiee production workflow: Dolby On-style recording with live VU metering, creator presets, granular DSP sliders, and multi-track studio timeline.
+
+### Option A: Run with Expo (Recommended)
+```bash
+cd example
+yarn install
+
+# Run on iOS Simulator (auto-generates native project & compiles C++ engine)
+npx expo run:ios
+
+# Or run on Android Emulator / Device
+npx expo run:android
+
+# Start Metro dev server
+npx expo start --dev-client
+```
+
+### Option B: Run with Bare React Native CLI
+```bash
+cd example
+yarn install
+
+# iOS:
+cd ios && pod install && cd ..
+yarn ios:bare
+
+# Android:
+yarn android:bare
 ```
 
 ---
