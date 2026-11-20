@@ -2,7 +2,6 @@
 
 > **High-Performance C++ Audio Engine with Multi-Track Timeline, Real-Time DSP & Smart Auto-Alignment for React Native.**
 
-[![CI](https://github.com/iphonic/react-native-audiee/actions/workflows/ci.yml/badge.svg)](https://github.com/iphonic/react-native-audiee/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](https://opensource.org/licenses/MIT)
 [![Platform - iOS & Android](https://img.shields.io/badge/Platform-iOS%20%7C%20Android-blue.svg)](https://reactnative.dev)
 [![Engine - miniaudio](https://img.shields.io/badge/Audio%20Core-miniaudio%20C%2B%2B17-green.svg)](https://miniaud.in)

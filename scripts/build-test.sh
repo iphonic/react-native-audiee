@@ -23,7 +23,7 @@ else
 fi
 
 echo "Compiling Audiee C++ Engine with $CXX on $UNAME_S..."
-$CXX -std=c++17 -O2 -Icpp \
+$CXX -std=gnu++17 -D_GNU_SOURCE -O2 -Icpp \
     cpp/AudieeEngine.cpp \
     cpp/timeline/AudioTrack.cpp \
     cpp/timeline/MultiTrackMixer.cpp \
