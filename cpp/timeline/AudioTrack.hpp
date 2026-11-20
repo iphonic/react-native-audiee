@@ -51,7 +51,7 @@ public:
     // Audio Rendering: reads samples corresponding to timeline position 'timelineSample'
     void readSamples(int64_t timelineSample, float* outInterleavedStereo, size_t frameCount);
 
-    // Get raw decoded PCM buffer (used by cross-correlation alignment)
+    // Get raw decoded PCM buffer (for analysis, visualizers, or custom extensions)
     const std::vector<float>& getRawPCM() const { return pcmBuffer_; }
     uint32_t getSampleRate() const { return sampleRate_; }
 

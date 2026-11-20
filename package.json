@@ -1,7 +1,7 @@
 {
   "name": "react-native-audiee",
   "version": "1.0.0",
-  "description": "High-performance C++ Audio Engine with Multi-Track Timeline, Real-Time DSP & Smart Auto-Alignment for React Native",
+  "description": "High-performance C++ Audio Engine with Multi-Track Timeline and Real-Time DSP for React Native",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/src/index.d.ts",
@@ -38,9 +38,7 @@
     "reverb",
     "compressor",
     "noise-gate",
-    "multitrack",
-    "cross-correlation",
-    "auto-align"
+    "multitrack"
   ],
   "author": "Audiee",
   "license": "MIT",

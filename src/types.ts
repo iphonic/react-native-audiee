@@ -6,11 +6,6 @@ export interface WaveformData {
   channels: number;
 }
 
-export interface AlignmentResult {
-  offsetMs: number;
-  confidence: number; // 0.0 to 1.0
-}
-
 export interface DSPSettings {
   denoise?: number; // 0.0 to 1.0
   warmthDb?: number; // -12.0 to +12.0 dB

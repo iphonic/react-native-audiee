@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name         = "react-native-audiee"
   s.version      = "1.0.0"
-  s.summary      = "High-performance C++ Audio Engine with Multi-Track Timeline, Real-Time DSP & Smart Auto-Alignment for React Native"
+  s.summary      = "High-performance C++ Audio Engine with Multi-Track Timeline & Real-Time DSP for React Native"
   s.homepage     = "https://github.com/audiee/react-native-audiee"
   s.license      = "MIT"
   s.authors      = { "Audiee Team" => "contact@audiee.app" }
