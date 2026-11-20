@@ -1,17 +1,24 @@
 #!/bin/bash
-set -e
+set -ex
 
 mkdir -p test
 
-CXX="${CXX:-clang++}"
+# Detect C++ compiler (fallback gracefully to g++ if clang++ is not present)
+if [ -z "$CXX" ]; then
+    if command -v clang++ >/dev/null 2>&1; then
+        CXX="clang++"
+    elif command -v g++ >/dev/null 2>&1; then
+        CXX="g++"
+    else
+        CXX="c++"
+    fi
+fi
 
 # Detect Operating System for platform-specific audio driver libraries
 UNAME_S="$(uname -s)"
 if [ "$UNAME_S" = "Linux" ]; then
-    # Linux requires dlopen, math, pthread, and alsa
     EXTRA_FLAGS="-lpthread -ldl -lm -lasound"
 else
-    # macOS includes CoreAudio and POSIX libs in libSystem
     EXTRA_FLAGS="-lpthread -ldl -lm"
 fi
 
@@ -24,5 +31,6 @@ $CXX -std=c++17 -O2 -Icpp \
     $EXTRA_FLAGS \
     -o test/bin
 
+chmod +x test/bin
 echo "Executing test binary..."
 ./test/bin
