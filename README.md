@@ -1,18 +1,22 @@
 # react-native-audiee 🎙️⚡
 
-> **High-Performance C++ Audio Engine with Multi-Track Timeline, Real-Time DSP & Smart Auto-Alignment for React Native.**
+> **High-Performance C++ Audio Engine with Multi-Track Timeline, Real-Time DSP, AI Stem Separation & Smart Auto-Alignment for React Native.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](https://opensource.org/licenses/MIT)
 [![Platform - iOS & Android](https://img.shields.io/badge/Platform-iOS%20%7C%20Android-blue.svg)](https://reactnative.dev)
 [![Engine - miniaudio](https://img.shields.io/badge/Audio%20Core-miniaudio%20C%2B%2B17-green.svg)](https://miniaud.in)
+[![Package Manager - SPM & CocoaPods](https://img.shields.io/badge/Package%20Manager-SPM%20%2B%20CocoaPods-purple.svg)](https://swift.org/package-manager/)
 
-`react-native-audiee` brings DAW-level audio processing to React Native. Built on a low-latency C++17 core (`miniaudio`), it provides sample-accurate multi-track mixing, zero-latency DSP sliders (EQ, Freeverb, Compressor, Noise Gate), high-speed waveform peak extraction, and 1-touch **Smart Auto-Alignment** via cross-correlation.
+`react-native-audiee` brings DAW-level audio processing to React Native. Built on a low-latency C++17 core (`miniaudio`), it provides sample-accurate multi-track mixing, zero-latency DSP sliders (EQ, Freeverb, Compressor, Noise Gate), high-speed waveform peak extraction, **AI Stem Separation** (vocals vs. instrumental), and 1-touch **Smart Auto-Alignment** via cross-correlation.
 
 ---
 
 ## ✨ Features
 
 - **⚡ C++ Low-Latency Audio Core**: Powered by `miniaudio.h` directly accessing AAudio/OpenSL ES on Android and CoreAudio on iOS.
+- **🤖 AI Stem Separation**:
+  - Built-in Short-Time Fourier Transform (**STFT**) and Inverse STFT (**iSTFT**) with Overlap-Add (OLA) energy normalization.
+  - Decomposes mixed audio into **Isolated Vocals** and **Clean Instrumentals** (karaoke / backing track) with verified reconstruction fidelity ($< 0.005$ error).
 - **🎛️ Real-Time DSP Chain**:
   - **3-Band Biquad Equalizer** (Low warmth shelf, Presence peak, Air brilliance shelf)
   - **Freeverb Stereo Reverb** (8 comb filters + 4 allpass filters)
@@ -24,6 +28,8 @@
   - Decodes audio files in C++ and generates downsampled min/max peak buffers optimized for `@shopify/react-native-skia`.
 - **🎚️ Multi-Track Timeline**:
   - Sample-accurate playback, independent track faders, panning, mute/solo, and offline mix export to WAV / MP3 with LUFS loudness normalization.
+- **🍏 Swift Package Manager & CocoaPods**:
+  - Future-proof dual support: Works seamlessly via `Package.swift` in modern Xcode / React Native 0.74+ or via `react-native-audiee.podspec`.
 
 ---
 
@@ -35,10 +41,18 @@ npm install react-native-audiee
 yarn add react-native-audiee
 ```
 
-For iOS:
+### iOS Setup (Choose CocoaPods or Swift Package Manager)
+
+#### Option A: CocoaPods
 ```bash
 cd ios && pod install
 ```
+
+#### Option B: Swift Package Manager (SPM)
+In Xcode:
+1. Go to **File → Add Package Dependencies...**
+2. Enter the repository URL: `https://github.com/iphonic/react-native-audiee.git`
+3. Select version rule **Up to Next Major Version**.
 
 ---
 
@@ -52,11 +66,26 @@ const engine = new AudieeEngine({ sampleRate: 44100 });
 await engine.initialize();
 ```
 
-### 2. High-Speed Waveform Peak Extraction
-Extract peaks in milliseconds for silky smooth 60 FPS waveform rendering:
+### 2. AI Stem Separation (Vocals vs Instrumental Isolation)
+Isolate vocals and instrumental backing tracks with a single call:
 ```typescript
-const waveform = await AudieeEngine.extractWaveform('file:///path/to/vocal.wav', 50);
-console.log('Peak count:', waveform.minPeaks.length);
+const { success, vocalPath, instrumentalPath } = await AudieeEngine.separateStems(
+  'file:///path/to/song.mp3',
+  {
+    outputVocalPath: 'file:///path/to/song_vocals.wav',
+    outputInstPath: 'file:///path/to/song_instrumental.wav',
+  }
+);
+
+if (success) {
+  // Load both stems directly onto your multi-track timeline!
+  const vocalTrack = await engine.addTrack('vocals', vocalPath);
+  const instTrack = await engine.addTrack('instrumental', instrumentalPath);
+
+  // Apply vocal preset & adjust levels
+  vocalTrack.applyPreset(BuiltinPresets.StudioVocal);
+  instTrack.setVolume(0.85);
+}
 ```
 
 ### 3. Multi-Track Timeline & Real-Time DSP
@@ -70,7 +99,7 @@ vocal.applyPreset(BuiltinPresets.PodcastCrisp);
 
 // Or tweak granular DSP sliders in real-time with zero latency
 vocal.setDSP({
-  denoise: 0.70,        // 70% background noise reduction
+  denoise: 0.70,        // 70% background room noise reduction
   warmthDb: 3.5,        // +3.5 dB low-end warmth
   airDb: 4.0,           // +4.0 dB high-frequency presence
   reverbMix: 0.15,      // 15% studio room space
@@ -87,13 +116,20 @@ Automatically align an out-of-sync backing beat or second mic to the lead vocal:
 ```typescript
 const { offsetMs, confidence } = await engine.autoAlignTracks('track_vocal', 'track_beat');
 
-console.log(`Tracks aligned! Shifted beat by ${offsetMs}ms with ${(confidence * 100).toFixed(0)}% confidence`);
+console.log(`Aligned! Shifted beat by ${offsetMs}ms with ${(confidence * 100).toFixed(0)}% confidence`);
 
 // Snap the track on the timeline
 beat.setTimeOffset(offsetMs);
 ```
 
-### 5. Export Mastered Mix
+### 5. High-Speed Waveform Peak Extraction
+Extract peaks in milliseconds for silky smooth 60 FPS waveform rendering:
+```typescript
+const waveform = await AudieeEngine.extractWaveform('file:///path/to/vocal.wav', 50);
+console.log('Total peaks extracted:', waveform.minPeaks.length);
+```
+
+### 6. Export Mastered Mix
 ```typescript
 await engine.exportMix({
   outputPath: 'file:///path/to/mastered_mix.wav',
@@ -121,12 +157,28 @@ await engine.exportMix({
 │  └───────────────────────┘  │ • Room Noise Gate     │  │
 │  ┌───────────────────────┐  └───────────────────────┘  │
 │  │ Cross-Correlation FFT │  ┌───────────────────────┐  │
-│  │ • Auto-Align Algorithm│  │ Waveform Peak Extractor│ │
-│  └───────────────────────┘  └───────────────────────┘  │
+│  │ • Auto-Align Algorithm│  │  AI Stem Separator    │  │
+│  └───────────────────────┘  │ • STFT / iSTFT Engine │  │
+│  ┌───────────────────────┐  │ • Vocal Soft-Masking  │  │
+│  │ Waveform Peak Extract │  └───────────────────────┘  │
+│  └───────────────────────┘                             │
 └──────────────────────────┬─────────────────────────────┘
                            │ miniaudio Driver (Direct Hardware I/O)
             [iOS: CoreAudio]   [Android: AAudio / Oboe]
 ```
+
+---
+
+## 🏷️ Versioning & Releases
+
+This project follows [Semantic Versioning (SemVer)](https://semver.org/). To release a new version with automated podspec synchronization:
+
+```bash
+npm run version:patch   # 1.0.0 -> 1.0.1 (Bug fixes)
+npm run version:minor   # 1.0.0 -> 1.1.0 (New features)
+npm run version:major   # 1.0.0 -> 2.0.0 (Breaking changes)
+```
+The `postversion` hook automatically synchronizes the new version into `ios/react-native-audiee.podspec`, commits the changes, creates the git tag, and pushes to GitHub.
 
 ---
 
@@ -142,4 +194,4 @@ npm run test:cpp
 
 ## 📄 License
 
-MIT License © [Audiee](https://github.com/audiee/react-native-audiee)
+MIT License © [Audiee](https://github.com/iphonic/react-native-audiee)
