@@ -20,7 +20,7 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "test:cpp": "mkdir -p test && clang++ -std=c++17 -O2 -Icpp cpp/AudieeEngine.cpp cpp/timeline/AudioTrack.cpp cpp/timeline/MultiTrackMixer.cpp test/engine_test.cpp -lpthread -ldl -lm -o test/bin && ./test/bin",
+    "test:cpp": "bash scripts/build-test.sh",
     "version:patch": "npm version patch -m \"chore(release): bump version to %s\"",
     "version:minor": "npm version minor -m \"chore(release): bump version to %s\"",
     "version:major": "npm version major -m \"chore(release): bump version to %s\"",
