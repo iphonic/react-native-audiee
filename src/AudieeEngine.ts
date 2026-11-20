@@ -135,6 +135,37 @@ export class AudieeEngine {
   }
 
   /**
+   * AI Stem Separator: Isolates mixed audio into Vocals and Instrumental stems
+   */
+  public static async separateStems(
+    inputFilePath: string,
+    options?: {
+      outputVocalPath?: string;
+      outputInstPath?: string;
+    }
+  ): Promise<{
+    success: boolean;
+    vocalPath: string;
+    instrumentalPath: string;
+    durationSeconds: number;
+    errorMessage?: string;
+  }> {
+    const vocalPath = options?.outputVocalPath ?? inputFilePath.replace(/\.[^/.]+$/, '_vocals.wav');
+    const instPath = options?.outputInstPath ?? inputFilePath.replace(/\.[^/.]+$/, '_instrumental.wav');
+
+    const result = await NativeAudiee?.separateStems(inputFilePath, vocalPath, instPath);
+    return (
+      result ?? {
+        success: false,
+        vocalPath,
+        instrumentalPath: instPath,
+        durationSeconds: 0,
+        errorMessage: 'Native Audiee engine not initialized',
+      }
+    );
+  }
+
+  /**
    * Offline Mixdown and Export to file (WAV / MP3)
    */
   public async exportMix(options: ExportOptions): Promise<boolean> {

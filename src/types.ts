@@ -38,4 +38,14 @@ export interface ExportOptions {
   normalizeLufs?: number; // e.g. -14.0 for Spotify, -16.0 for Podcasts
 }
 
+export interface SeparationResult {
+  success: boolean;
+  vocalPath: string;
+  instrumentalPath: string;
+  durationSeconds: number;
+  errorMessage?: string;
+}
+
+export type SeparationProgressCallback = (progress: number) => void;
+
 export type MeteringCallback = (rmsDb: number, peakDb: number) => void;

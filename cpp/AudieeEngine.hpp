@@ -5,6 +5,7 @@
 #include "miniaudio.h"
 #include "timeline/MultiTrackMixer.hpp"
 #include "waveform/PeakExtractor.hpp"
+#include "ai/StemSeparator.hpp"
 
 namespace Audiee {
 
@@ -38,6 +39,17 @@ public:
     // Static Utility Methods
     static Waveform::WaveformData extractWaveform(const std::string& filePath, uint32_t pps = 50) {
         return Waveform::PeakExtractor::extractPeaks(filePath, pps);
+    }
+
+    // AI Stem Separator (Vocals vs Instrumental Isolation)
+    static AI::SeparationResult separateStems(
+        const std::string& inputFilePath,
+        const std::string& outputVocalPath,
+        const std::string& outputInstPath,
+        AI::ProgressCallback progress = nullptr
+    ) {
+        AI::StemSeparator separator;
+        return separator.separate(inputFilePath, outputVocalPath, outputInstPath, progress);
     }
 
 private:

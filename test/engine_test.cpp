@@ -67,11 +67,36 @@ int main() {
 
     std::cout << "DSP chain processed 1024 frames cleanly with zero NaN/Inf." << std::endl;
 
-    std::cout << "[4/4] MultiTrackMixer verification..." << std::endl;
+    std::cout << "[4/5] MultiTrackMixer verification..." << std::endl;
     auto mixer = engine.getMixer();
     assert(mixer != nullptr);
     std::cout << "Mixer instance created and verified!" << std::endl;
 
-    std::cout << "=== ALL AUDIEE C++ ENGINE TESTS PASSED! ===" << std::endl;
+    // Test 5: AI STFT Spectrogram & iSTFT Overlap-Add Perfect Reconstruction
+    std::cout << "[5/5] Testing AI STFT Spectrogram & Stem Separation Engine..." << std::endl;
+    Audiee::AI::SpectralTransform stft(1024, 256);
+    const size_t sigLen = 1024 * 4;
+    std::vector<float> originalSignal(sigLen, 0.0f);
+    for (size_t i = 0; i < sigLen; ++i) {
+        originalSignal[i] = std::sin(2.0f * 3.14159265f * 440.0f * (float)i / 44100.0f);
+    }
+
+    auto spectrogram = stft.forwardSTFT(originalSignal.data(), sigLen);
+    assert(!spectrogram.empty());
+    std::cout << "Forward STFT produced " << spectrogram.size() << " time-frequency spectrogram frames." << std::endl;
+
+    auto reconstructed = stft.inverseSTFT(spectrogram, sigLen);
+    assert(reconstructed.size() == sigLen);
+
+    // Verify reconstruction fidelity (ignoring edge taper)
+    float maxDiff = 0.0f;
+    for (size_t i = 1024; i < sigLen - 1024; ++i) {
+        float diff = std::abs(originalSignal[i] - reconstructed[i]);
+        if (diff > maxDiff) maxDiff = diff;
+    }
+    std::cout << "iSTFT Reconstruction Max Error: " << maxDiff << " (Precision verified < 0.005)" << std::endl;
+    assert(maxDiff < 0.005f);
+
+    std::cout << "=== ALL AUDIEE C++ ENGINE & AI TESTS PASSED! ===" << std::endl;
     return 0;
 }

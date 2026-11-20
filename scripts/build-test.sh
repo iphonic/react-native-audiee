@@ -27,6 +27,7 @@ $CXX -std=gnu++17 -D_GNU_SOURCE -O2 -Icpp \
     cpp/AudieeEngine.cpp \
     cpp/timeline/AudioTrack.cpp \
     cpp/timeline/MultiTrackMixer.cpp \
+    cpp/ai/StemSeparator.cpp \
     test/engine_test.cpp \
     $EXTRA_FLAGS \
     -o test/bin
